@@ -1,28 +1,33 @@
-# sources/veinte_minutos.py
+# sources/veinteMinutos.py
+
+START_URL = "https://www.20minutos.es/"
 
 def extract_article_links(selector):
     """
-    Extrae los enlaces y títulos de artículos de 20minutos.
-    Devuelve una lista de tuplas: (título, enlace).
+    Recibe un scrapy.Selector de la portada de 20minutos y devuelve:
+      - lista de (title, link)
+      - None (no paginación en portada)
     """
     articles = selector.css("article.media, article.media.media-big")
     result = []
-    for article in articles:
-        link_element = article.css("h1 a, figure a")
-        link = link_element.css("::attr(href)").get()
-        title = link_element.css("::text").get(default="").strip()
-        if title and link:
+    for art in articles:
+        link = art.css("h1 a::attr(href), figure a::attr(href)").get()
+        title = art.css("h1 a::text, figure a::text").get(default="").strip()
+        if link and title:
             result.append((title, link))
-    return result
+    return result, None
 
 def extract_article_content(selector):
     """
-    Extrae el título y párrafos de un artículo de 20minutos.
-    Devuelve: (título, lista_de_parrafos).
+    Recibe un scrapy.Selector de un artículo de 20minutos y devuelve:
+      (title, [paragraphs], "", "")
     """
-    title = selector.css("h1.article-title::text").get(default="").strip()
+    title = (
+        selector.css("meta[property='og:title']::attr(content)").get()
+        or selector.css("h1.article-title::text").get(default="").strip()
+    )
     paragraphs = selector.css(
-        'div.article-body p::text, div.article-content p::text, '
-        'p.paragraph::text, p.interview-line::text, h2.paragraph-ladillo::text'
+        "div.article-body p::text, div.article-content p::text, "
+        "p.paragraph::text, p.interview-line::text, h2.paragraph-ladillo::text"
     ).getall()
-    return title, paragraphs
+    return title, paragraphs, "", ""

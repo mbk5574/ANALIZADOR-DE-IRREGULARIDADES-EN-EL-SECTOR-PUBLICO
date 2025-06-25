@@ -6,22 +6,26 @@ from itemadapter import ItemAdapter
 class CorruptionDetectorPipeline:
     def open_spider(self, spider):
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        self.file = open(f'corruption_data_{timestamp}.json', 'w', encoding='utf-8')
-        self.file.write('[\n')
-        self.first_item = True  # Indicador del primer item para controlar comas
+        self.path = f'corruption_data_{timestamp}.json'
+        self.first_item = True
 
     def close_spider(self, spider):
-        self.file.write('\n]')
-        self.file.close()
+        with open(self.path, 'a', encoding='utf-8') as f:
+            f.write('\n]')
 
     def process_item(self, item, spider):
-        line = json.dumps(dict(item), ensure_ascii=False)
-        if self.first_item:
-            self.file.write(line)
-            self.first_item = False
-        else:
-            self.file.write(",\n" + line)
+        adapter = ItemAdapter(item)
+        adapter['date_scraped'] = datetime.datetime.now().astimezone().isoformat()
+
+        line = json.dumps(dict(adapter), ensure_ascii=False)
+        with open(self.path, 'a', encoding='utf-8') as f:
+            if self.first_item:
+                f.write('[\n' + line)
+                self.first_item = False
+            else:
+                f.write(',\n' + line)
         return item
+
 
 class TextCleanerPipeline:
     def process_item(self, item, spider):
@@ -30,6 +34,6 @@ class TextCleanerPipeline:
             adapter['content_preview'] = adapter['content_preview'].strip()
         if adapter.get('title'):
             adapter['title'] = adapter['title'].replace('\n', ' ').strip()
-        
+
         logging.debug(f"Ítem limpiado: {adapter.get('title', 'Sin título')}")
         return item
