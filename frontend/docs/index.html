@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>App.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Componente raiz de la aplicación “Analizador de Irregularidades”.
+Orquesta el siguient flujo de pasos: 
+1) Subida de PDF de contrato, 
+2) consulta en el BOE, 
+3) definicion de términos de búsqueda por el usuario, 
+4) ejecución y monitorización de jobs de scraping(como hemos comentado anteriormente, pueden ejecutarse varios jobs en paralelo),
+5) visualización de resultados y análisis.
+Usamos Bootstrap para el diseño general y tambien para los graficos finales de la seccion de analisis y React para gestionar estado y rutas internas.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="App.jsx.html">App.jsx</a>, <a href="App.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/AnalysisDashboard.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">En este .jsx definiremos nuestro anel de análisis que mostrará varios gráficos basados en los datos scrapeados, en este caso hemos definido 5 gráficos:1. Frecuencia de términos de corrupción.2. Histograma de polaridad de sentimiento.3. Top entidades mencionadas y su polaridad media.4. Distribución de sentimiento por fuente.5. Gráfico de dispersión de entidades vs. polaridad media.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_AnalysisDashboard.jsx.html">components/AnalysisDashboard.jsx</a>, <a href="components_AnalysisDashboard.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/BoeForm.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Formulario para buscar datos de un contrato en el BOE.Recupera la fecha de publicación y el número de expediente,realiza una llamada a la API y envía los datos encontrados alcomponente padre (app.jsx) mediante la función onFound donde se procesaran los datos recibidos.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_BoeForm.jsx.html">components/BoeForm.jsx</a>, <a href="components_BoeForm.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/ContractDetails.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Este componente renderiza la información principal de un contratoextraído del BOE. Muestra el identificador, título, organismo y,si está disponible, un enlace para descargar su PDF que ayude a continuacion al usuario a extraer terminos clave.En conjunto, facilita al usuario entender rápidamente los datosdel contrato sin necesidad de salir del flujo de la aplicación.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_ContractDetails.jsx.html">components/ContractDetails.jsx</a>, <a href="components_ContractDetails.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/JobResults.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Muestra los resultados de un job de análisis: permite descargar un CSV en caso de que el usuario quiera realizar un análisis posteriorde los datos obtenidos, y además renderiza un gráfico de barras con el recuento de términos contractualesencontrados y lista en una tabla todos los ítems procesados junto con sus metadatos.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_JobResults.jsx.html">components/JobResults.jsx</a>, <a href="components_JobResults.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/JobStatus.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Componente que muestra el estado de un job de scraping/análisis y, cuando se completa,solicita automáticamente sus resultados. Realiza polling al endpoint `/jobs/:jobId`cada 5 segundos hasta que el estado es `finished`, y entonces llama a `onFinished(data)`.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_JobStatus.jsx.html">components/JobStatus.jsx</a>, <a href="components_JobStatus.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/TermsForm.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Formulario para definir los términos de busqueda y lanzar el análisis.Permite añadir, editar y eliminar términos dinámicamente, tambien valida la entraday envia los datos al backend para crear un nuevo job de scraping con los terminos definidos por el usuario y los extraidos del pdf y de la llamada a la API del BOE.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_TermsForm.jsx.html">components/TermsForm.jsx</a>, <a href="components_TermsForm.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/UploadContract.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Formulario para subir un archivo PDF de contrato al backend.  Gestiona todos los pasos desde la seleccion de fichero, validación básica y el envio por FormDatahasta la notificación al padre mediante onUpload cuando la subida es exitosa.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_UploadContract.jsx.html">components/UploadContract.jsx</a>, <a href="components_UploadContract.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/ui/button.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Componente Button: wrapper sobre button de Bootstrap con variantes de estilo, tamaños,etc.Este componente unifica la forma de renderizar botones en la app al:Soportar variantes (primary, secondary, link, ghost) mapeadas a clases de Bootstrap predefinidas.Controla el tamaño, (se explica mas abajo), (sm, md, lg) ajustando paddings y fuente.Permite ocupar todo el ancho de su contenedor con `block`, por defecto lo dejamos en false porque pocas veces necesitamos ese comportamiento.Acepta `className` para extensiones puntuales, esto nos permite añadir clases css adicionales en caso de que sea necesario personalizar más allá de las variantes y tamaños predefinidos.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_ui_button.jsx.html">components/ui/button.jsx</a>, <a href="components_ui_button.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/ui/card.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Wrappers de tarjeta (Card) para Bootstrap.En conjunto, estos tres componentes facilitan mantener la consistenciavisual en toda la aplicación: todas las “tarjetas” lucirán igual, y también nos permiteinyectarles un `className` adicional cuando necesitemos adaptarlas a un caso concreto.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_ui_card.jsx.html">components/ui/card.jsx</a>, <a href="components_ui_card.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>components/ui/progress.jsx</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Progreso visual donde usamos el estilo Bootstrap que muestra una barra rellenablebasada en un valor porcentual, en este caso del progreso del step en el que nos encontremos.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_ui_progress.jsx.html">components/ui/progress.jsx</a>, <a href="components_ui_progress.jsx.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Button">Button</a></li><li><a href="global.html#Card">Card</a></li><li><a href="global.html#CardContent">CardContent</a></li><li><a href="global.html#CardHeader">CardHeader</a></li><li><a href="global.html#Progress">Progress</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jul 06 2025 20:05:05 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

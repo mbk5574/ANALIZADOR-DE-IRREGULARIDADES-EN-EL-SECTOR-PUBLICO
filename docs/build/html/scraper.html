@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Lanzador de Scraper (scraper.py) &#8212; documentación de Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico - 04/07/2025</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=0313ea85"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Spider (corruption_spider.py)" href="spider.html" />
+    <link rel="prev" title="Procesador de Contratos (contract_processor.py)" href="contract_processor.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="lanzador-de-scraper-scraper-py">
+<h1>Lanzador de Scraper (scraper.py)<a class="headerlink" href="#lanzador-de-scraper-scraper-py" title="Link to this heading">¶</a></h1>
+<p>Contiene la lógica para ejecutar el spider de Scrapy como un subproceso.</p>
+<p id="module-backend.scraper">backend/scraper.py</p>
+<p>Este modulo inicia el proceso de scraping externo (usando Scrapy) y actualiza
+el estado de los jobs en la base de datos.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.scraper.launch_scrape">
+<span class="sig-prename descclassname"><span class="pre">backend.scraper.</span></span><span class="sig-name descname"><span class="pre">launch_scrape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.scraper.launch_scrape" title="Link to this definition">¶</a></dt>
+<dd><p>Ejecuta el crawler de Scrapy como un subproceso y gestiona el flujo de estados.
+Los pasos que sigue son:
+1. Crea la carpeta de resultados si no existe.
+2. Construye y ejecuta el comando de Scrapy.
+3. Al terminar, actualiza el estado a finished o failed segun sea el caso.
+4. Normaliza el JSON de salida (asegura de esta manera un formato válido).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>terms</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Lista de terminos de busqueda que recibe el spider.</p></li>
+<li><p><strong>result_path</strong> (<em>str</em>) – Ruta donde Scrapy volcara los resultados en JSON.</p></li>
+<li><p><strong>job_id</strong> (<em>str</em>) – UUID del job para actualizar su estado.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.scraper.update_job_status">
+<span class="sig-prename descclassname"><span class="pre">backend.scraper.</span></span><span class="sig-name descname"><span class="pre">update_job_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.scraper.update_job_status" title="Link to this definition">¶</a></dt>
+<dd><p>Actualiza el estado de un job existente en la base de datos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>job_id</strong> (<em>str</em>) – UUID que identifica el job.</p></li>
+<li><p><strong>status</strong> (<a class="reference internal" href="database_models.html#backend.models.JobStatus" title="backend.models.JobStatus"><em>JobStatus</em></a>) – Nuevo estado que puede ser; (pending, running, finished, failed).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Documentación del Código:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api_main.html">API Principal (main.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_schemas.html">Schemas de Datos (schemas.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_models.html">Modelos de Base de Datos (models.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contract_processor.html">Procesador de Contratos (contract_processor.py)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Lanzador de Scraper (scraper.py)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#backend.scraper.launch_scrape"><code class="docutils literal notranslate"><span class="pre">launch_scrape()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.scraper.update_job_status"><code class="docutils literal notranslate"><span class="pre">update_job_status()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="spider.html">Spider (corruption_spider.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middlewares.html">Middlewares de Scrapy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items.html">Items de Scrapy (items.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines de Scrapy (pipelines.py)</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="contract_processor.html" title="capítulo anterior">Procesador de Contratos (contract_processor.py)</a></li>
+      <li>Next: <a href="spider.html" title="próximo capítulo">Spider (corruption_spider.py)</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mohammed Bannay Khyy.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/scraper.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

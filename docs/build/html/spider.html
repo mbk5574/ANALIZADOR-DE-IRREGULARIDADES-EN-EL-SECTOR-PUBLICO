@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Spider (corruption_spider.py) &#8212; documentación de Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico - 04/07/2025</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=0313ea85"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Middlewares de Scrapy" href="middlewares.html" />
+    <link rel="prev" title="Lanzador de Scraper (scraper.py)" href="scraper.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="spider-corruption-spider-py">
+<h1>Spider (corruption_spider.py)<a class="headerlink" href="#spider-corruption-spider-py" title="Link to this heading">¶</a></h1>
+<p>Define la lógica de rastreo y scraping de las fuentes de noticias.</p>
+<dl class="py class" id="module-corruption_detector.spiders.corruption_spider">
+<dt class="sig sig-object py" id="corruption_detector.spiders.corruption_spider.MultiSourceSpider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corruption_detector.spiders.corruption_spider.</span></span><span class="sig-name descname"><span class="pre">MultiSourceSpider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.spiders.corruption_spider.MultiSourceSpider" title="Link to this definition">¶</a></dt>
+<dd><p>Spider que recorrera diversas fuentes de noticias (las definidas en SOURCES),
+tambien extrae enlaces de artículos, filtra por términos de contrato + corrupción,
+calcula score de riesgo y sentimiento, y retorna los items para ser procesados por el pipeline.</p>
+<dl class="simple">
+<dt>Settings específicos:</dt><dd><ul class="simple">
+<li><p>Usamos Playwright para renderizar javascript y cargar contenido dinámico.</p></li>
+<li><p>definimos un límite de páginas y retrasos para no saturar las webs</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.spiders.corruption_spider.MultiSourceSpider.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.spiders.corruption_spider.MultiSourceSpider.normalize" title="Link to this definition">¶</a></dt>
+<dd><p>Normalizamos un texto eliminando acentos, pasando a ASCII,
+convirtiendo a minúsculas y quitando puntuación / espacios extra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Cadena original.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Texto limpio y normalizado.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.spiders.corruption_spider.MultiSourceSpider.on_timeout">
+<span class="sig-name descname"><span class="pre">on_timeout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">failure</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.spiders.corruption_spider.MultiSourceSpider.on_timeout" title="Link to this definition">¶</a></dt>
+<dd><p>Manejador de errores de Playwright: cierra la página si existe,
+y reintenta la petición sin Playwright si procede.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>failure</strong> – Failure object de Scrapy con la request que ha fallado.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.spiders.corruption_spider.MultiSourceSpider.parse_article">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_article</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.spiders.corruption_spider.MultiSourceSpider.parse_article" title="Link to this definition">¶</a></dt>
+<dd><p>Extraemos aqui el contenido de un articulo, tambien se filtra por terminos de contrato y corrupcion,
+calculamos puntuaciones de riesgo y sentimiento y generamos un CorruptionItem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>response</strong> (<em>scrapy.Response</em>) – Respuesta de la petición al artículo.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.spiders.corruption_spider.MultiSourceSpider.parse_source">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.spiders.corruption_spider.MultiSourceSpider.parse_source" title="Link to this definition">¶</a></dt>
+<dd><p>Parseamos la pagina de listado de artículos de una determinada fuente,
+extraemos los enlaces y reenviamos a parse_article, se define como una funcion asincrona porque necesitamos que interactue con playwright.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>response</strong> (<em>scrapy.Response</em>) – Respuesta de la petición de listado.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.spiders.corruption_spider.MultiSourceSpider.start_requests">
+<span class="sig-name descname"><span class="pre">start_requests</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.spiders.corruption_spider.MultiSourceSpider.start_requests" title="Link to this definition">¶</a></dt>
+<dd><p>Generamos aqui las peticiones iniciales a cada dominio de SOURCES.
+Usamos Playwright para renderizado o espera de selectores segun el modulo que estemos utilizando.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Documentación del Código:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api_main.html">API Principal (main.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_schemas.html">Schemas de Datos (schemas.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_models.html">Modelos de Base de Datos (models.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contract_processor.html">Procesador de Contratos (contract_processor.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scraper.html">Lanzador de Scraper (scraper.py)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Spider (corruption_spider.py)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#corruption_detector.spiders.corruption_spider.MultiSourceSpider"><code class="docutils literal notranslate"><span class="pre">MultiSourceSpider</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="middlewares.html">Middlewares de Scrapy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items.html">Items de Scrapy (items.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines de Scrapy (pipelines.py)</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="scraper.html" title="capítulo anterior">Lanzador de Scraper (scraper.py)</a></li>
+      <li>Next: <a href="middlewares.html" title="próximo capítulo">Middlewares de Scrapy</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mohammed Bannay Khyy.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/spider.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

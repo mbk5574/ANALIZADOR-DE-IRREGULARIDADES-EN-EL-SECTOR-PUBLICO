@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Middlewares de Scrapy &#8212; documentación de Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico - 04/07/2025</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=0313ea85"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Items de Scrapy (items.py)" href="items.html" />
+    <link rel="prev" title="Spider (corruption_spider.py)" href="spider.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="middlewares-de-scrapy">
+<h1>Middlewares de Scrapy<a class="headerlink" href="#middlewares-de-scrapy" title="Link to this heading">¶</a></h1>
+<blockquote>
+<div><p>Define los middlewares para interceptar y gestionar el proceso de scraping.</p>
+<p id="module-corruption_detector.middlewares">Middlewares de Scrapy para el proyecto Corruption Detector.
+- CorruptionDetectorSpiderMiddleware: hookea (es decir, intercepta) eventos del spider (como el: inicio, cierre, manejo de respuestas y excepciones).
+- CorruptionDetectorDownloaderMiddleware: maneja peticiones HTTP (headers, logging, errores de descarga).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corruption_detector.middlewares.</span></span><span class="sig-name descname"><span class="pre">CorruptionDetectorDownloaderMiddleware</span></span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Middleware de descarga que intercepta el siguiente flujo HTTP:</dt><dd><ul class="simple">
+<li><p>process_request: ajusta headers y loguea la petición.</p></li>
+<li><p>process_response: detecta status inesperados y loguea la respuesta.</p></li>
+<li><p>process_exception: registra errores de descarga.</p></li>
+<li><p>spider_opened / spider_closed: loguea el inicio y fin del middleware.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.from_crawler">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_crawler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crawler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.from_crawler" title="Link to this definition">¶</a></dt>
+<dd><p>Constructor: conecta señales de apertura y cierre.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.process_exception">
+<span class="sig-name descname"><span class="pre">process_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.process_exception" title="Link to this definition">¶</a></dt>
+<dd><p>Si ocurre un error durante la descarga, lo registramos como por ejemplo que se agote el tiempo de espera, url inexistente, etc.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.process_request">
+<span class="sig-name descname"><span class="pre">process_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.process_request" title="Link to this definition">¶</a></dt>
+<dd><p>Antes de enviar la petición HTTP, asignamos un User-Agent por defecto
+y registramos la URL y los headers(buena practica con la que se ha conseguido evitar que algunas paginas bloqueen el scraping).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.process_response">
+<span class="sig-name descname"><span class="pre">process_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.process_response" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Tras recibir la respuesta HTTP:</dt><dd><ul class="simple">
+<li><p>si el status no es 200, emitimos un warning.</p></li>
+<li><p>y siempre retornamos la respuesta al spider.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.spider_closed">
+<span class="sig-name descname"><span class="pre">spider_closed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.spider_closed" title="Link to this definition">¶</a></dt>
+<dd><p>Señal de cierre del middleware (limpieza)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.spider_opened">
+<span class="sig-name descname"><span class="pre">spider_opened</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware.spider_opened" title="Link to this definition">¶</a></dt>
+<dd><p>Señal de apertura del middleware (inicialización).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corruption_detector.middlewares.</span></span><span class="sig-name descname"><span class="pre">CorruptionDetectorSpiderMiddleware</span></span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Middleware de spider que intercepta y registra eventos dentro del ciclo de vida del Spider:</dt><dd><ul class="simple">
+<li><p>process_spider_input: antes de que el spider procese la respuesta.</p></li>
+<li><p>process_spider_output: tras generar items del spider.</p></li>
+<li><p>process_spider_exception: captura excepciones en el spider.</p></li>
+<li><p>process_start_requests: registra las peticiones iniciales.</p></li>
+<li><p>spider_opened / spider_closed: loguea apertura y cierre del spider.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.from_crawler">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_crawler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">crawler</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.from_crawler" title="Link to this definition">¶</a></dt>
+<dd><p>Constructor que utilizaremos para crear una instancia del middleware: conecta las señales de apertura y cierre del spider.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.process_spider_exception">
+<span class="sig-name descname"><span class="pre">process_spider_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.process_spider_exception" title="Link to this definition">¶</a></dt>
+<dd><p>Se llama si ocurre una excepcion en el spider durante el parseo.
+Registramos el error y continuamos sin interrumpir.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.process_spider_input">
+<span class="sig-name descname"><span class="pre">process_spider_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.process_spider_input" title="Link to this definition">¶</a></dt>
+<dd><p>Se llama antes de que el spider procese una respuesta.
+aqui tan solo registramos la URL.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.process_spider_output">
+<span class="sig-name descname"><span class="pre">process_spider_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.process_spider_output" title="Link to this definition">¶</a></dt>
+<dd><p>Llamado tras que el spider genere items o nuevas peticiones.
+Registramos cada item emitido.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.process_start_requests">
+<span class="sig-name descname"><span class="pre">process_start_requests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_requests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.process_start_requests" title="Link to this definition">¶</a></dt>
+<dd><p>lo llamamos para iterar las peticiones iniciales del spider.
+Registramos cada URL que va a ser solicitada.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.spider_closed">
+<span class="sig-name descname"><span class="pre">spider_closed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.spider_closed" title="Link to this definition">¶</a></dt>
+<dd><p>Señal de spider cerrado: para mostrar un mensaje de log.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.spider_opened">
+<span class="sig-name descname"><span class="pre">spider_opened</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware.spider_opened" title="Link to this definition">¶</a></dt>
+<dd><p>Señal de spider abierto: simplemente es para mostrar un mensaje informativo.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Documentación del Código:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api_main.html">API Principal (main.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_schemas.html">Schemas de Datos (schemas.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_models.html">Modelos de Base de Datos (models.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contract_processor.html">Procesador de Contratos (contract_processor.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scraper.html">Lanzador de Scraper (scraper.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spider.html">Spider (corruption_spider.py)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Middlewares de Scrapy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#corruption_detector.middlewares.CorruptionDetectorDownloaderMiddleware"><code class="docutils literal notranslate"><span class="pre">CorruptionDetectorDownloaderMiddleware</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#corruption_detector.middlewares.CorruptionDetectorSpiderMiddleware"><code class="docutils literal notranslate"><span class="pre">CorruptionDetectorSpiderMiddleware</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="items.html">Items de Scrapy (items.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines de Scrapy (pipelines.py)</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="spider.html" title="capítulo anterior">Spider (corruption_spider.py)</a></li>
+      <li>Next: <a href="items.html" title="próximo capítulo">Items de Scrapy (items.py)</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mohammed Bannay Khyy.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/middlewares.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

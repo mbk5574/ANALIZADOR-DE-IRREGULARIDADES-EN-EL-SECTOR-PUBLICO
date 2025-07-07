@@ -21,7 +21,7 @@ def extract_article_links(selector):
     next_page = selector.css("a.next-page-link::attr(href)").get()
     return result, next_page
 
-def extract_article_content(selector):
+def extract_article_content(selector, meta=None):
     """
     Recibe un scrapy.Selector de un artículo individual y devuelve:
       (title, [paragraphs], author, publication_date)

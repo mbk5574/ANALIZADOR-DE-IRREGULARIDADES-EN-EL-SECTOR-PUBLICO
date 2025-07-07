@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "@shadcn/ui": "^0.0.4",
+    "bootstrap": "^5.3.7",
+    "chart.js": "^4.5.0",
+    "framer-motion": "^12.23.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dropzone": "^14.3.8",
+    "recharts": "^3.0.2"
+  },
+  "devDependencies": {
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0"
+  }
+}

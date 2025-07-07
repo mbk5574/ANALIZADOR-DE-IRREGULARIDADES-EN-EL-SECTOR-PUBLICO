@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/BoeForm.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/BoeForm.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview
+ * Formulario para buscar datos de un contrato en el BOE.
+ * Recupera la fecha de publicación y el número de expediente,
+ * realiza una llamada a la API y envía los datos encontrados al
+ * componente padre (app.jsx) mediante la función onFound donde se procesaran los datos recibidos.
+ */
+
+import React, { useState } from 'react'
+const API = import.meta.env.VITE_API_URL
+import { Button } from './ui/button'
+
+/**
+ *
+ * @param {object} props
+ * @param {(data: any, fecha: string, expediente: string) => void} props.onFound
+ *   Callback que se invoca cuando la búsqueda en el BOE es exitosa.
+ *   Recibe los datos del contrato, la fecha y el expediente.
+ * @returns {JSX.Element}
+ */
+
+//recibimos una funcion o callback onFound del componente padre 
+export default function BoeForm({ onFound }) {
+  //definimos los estados necesarios para manejar el formulario, lo hacemos con useState que nos permite crear variables de estado en componentes funcionales
+  //fecha y expediente son los campos que el usuario debe completar
+  const [fecha, setFecha] = useState('')
+  const [expediente, setExpediente] = useState('')
+  //error y loading son estados para manejar errores y el estado de carga(basicamente controlar si se esta haciendo una peticion o no)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+
+  const handleSubmit = async e => {
+    //Como nuestro proyecto usa React basandose en el modelo SPA (Single Page Application) evitamos recargar la pagina porque eso haría que se perdieran los estados del formulario
+    e.preventDefault()
+    //Validamos que la fecha tenga el formato correcto (AAAAMMDD) y que el expediente no esté vacío
+    if (!/^\d{8}$/.test(fecha) || !expediente.trim()) {
+      setError('Debes indicar fecha (AAAAMMDD) y expediente')
+      return
+    }
+
+    setLoading(true); setError('')
+    //Realizamos la petición a la API del backend para buscar el contrato
+    try {
+      //Usamos fetch para hacer la petición GET a la API, pasamos la fecha y el expediente como parámetros en la URL
+      const res = await fetch(
+        `${API}/contracts/${fecha}/${encodeURIComponent(expediente.trim())}`
+      )
+      if (!res.ok) throw new Error(`Contrato no encontrado (${res.status})`)
+      //Si la petición es exitosa, parseamos la respuesta a JSON y llamamos a onFound con los datos obtenidos para que el componente padre(app.jsx) pueda procesarlos
+      const data = await res.json()
+      onFound(data, fecha, expediente.trim())
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      //Finalmente, independientemente de si la petición fue exitosa o no, cambiamos el estado de loading a false para indicar que ya no estamos cargando y asi poder volver a habilitar el botón de búsqueda
+      setLoading(false)
+    }
+  }
+
+  return (
+    &lt;form onSubmit={handleSubmit} className="space-y-4 flex flex-col items-center max-w-md mx-auto">
+      &lt;div>
+        &lt;label className="block font-medium mb-1">Fecha Publicación En El BOE (AAAAMMDD)&lt;/label>
+        &lt;input
+          type="text"
+          value={fecha}
+          onChange={e => setFecha(e.target.value)}
+          className="w-full border rounded px-3 py-2"
+          placeholder="20250703"
+        />
+      &lt;/div>
+      &lt;div>
+        &lt;label className="block font-medium mb-1">Número de expediente&lt;/label>
+        &lt;input
+          type="text"
+          value={expediente}
+          onChange={e => setExpediente(e.target.value)}
+          className="w-full border rounded px-3 py-2"
+          placeholder="BOE-B-2025-22668"
+        />
+      &lt;/div>
+      {error &amp;&amp; &lt;p className="text-red-600">{error}&lt;/p>}
+      &lt;div className="text-center mt-4 w-100">
+        &lt;Button
+          type="submit"
+          variant="primary"
+          block
+          disabled={loading}
+        >
+          {loading ? 'Buscando…' : 'Buscar en BOE'}
+        &lt;/Button>
+      &lt;/div>
+    &lt;/form>
+  )
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Button">Button</a></li><li><a href="global.html#Card">Card</a></li><li><a href="global.html#CardContent">CardContent</a></li><li><a href="global.html#CardHeader">CardHeader</a></li><li><a href="global.html#Progress">Progress</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jul 06 2025 20:05:05 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

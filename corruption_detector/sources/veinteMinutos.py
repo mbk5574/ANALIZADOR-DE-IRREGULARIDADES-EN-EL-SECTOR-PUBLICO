@@ -17,7 +17,7 @@ def extract_article_links(selector):
             result.append((title, link))
     return result, None
 
-def extract_article_content(selector):
+def extract_article_content(selector, meta=None):
     """
     Recibe un scrapy.Selector de un artículo de 20minutos y devuelve:
       (title, [paragraphs], "", "")

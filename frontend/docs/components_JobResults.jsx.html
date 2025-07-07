@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/JobResults.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/JobResults.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview
+ * Muestra los resultados de un job de análisis: permite descargar un CSV en caso de que el usuario quiera realizar un análisis posterior
+ * de los datos obtenidos, y además renderiza un gráfico de barras con el recuento de términos contractuales
+ * encontrados y lista en una tabla todos los ítems procesados junto con sus metadatos.
+ */
+
+import React from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+/** importamos los elementos necesarios de chart.js para poder luego crear el grafico de barras con todos sus elementos **/
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
+//importamos el componente Bar de react-chartjs-2 que nos permite renderizar graficos de barras
+import { Bar } from 'react-chartjs-2'
+
+//Paso obligatorio para registrar los componentes de Chart.js que vamos a utilizar
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
+/**
+ * Componente que muestra los resultados de un job de scraping/análisis.
+ *
+ * @param {object} props
+ * @param {string} props.jobId  Identificador unico del job, usado para generar la URL de descarga CSV.
+ * @param {Array|null} props.items  Array de resultados; puede ser:
+ *    - `null` mientras se cargan,
+ *    - `[]` si no hay resultados,
+ *    - un Array de objetos `CorruptionItem` con campos como `title`, `source`, `publication_date`, `date_scraped`,
+ *      `sentiment_polarity`, `contract_terms_found` y `entities`.
+ *
+ * @returns {JSX.Element} 
+ * Renderiza:
+ * 1. Mensaje de carga o “no hay resultados” si `items` es `null` o `[]` lo cual puede pasar cuando ninguno de los terminos indicativos de irregularidades se encuentran en los articulos scrapeados.
+ * 2. Enlace para descargar un CSV con todos los resultados.
+ * 3. Un gráfico de barras que muestra cuántas veces aparece cada término contractual.
+ * 4. Una tabla con todos los ítems, enlazando al artículo original y mostrando sus metadatos.
+ */
+
+export default function JobResults({ jobId, items }) {
+  //El componente recibe del padre un nulo o un array de items que son los resultados del job
+  //Si items es nulo, mostramos un mensaje de carga porque significa que el trabajo aun no ha terminado
+  if (items === null) {
+    return &lt;p className="mt-4">Cargando resultados…&lt;/p>
+  }
+  if (items.length === 0) {
+    return &lt;p className="mt-4">El análisis terminó pero no se encontraron resultados.&lt;/p>
+  }
+  //Si llegamos hasta aqui, significa que tenemos resultados y podemos proceder a construir la url que apuntara a nuestro endpoint del backend para poder descargar el archivo CSV
+  const csvUrl = `${import.meta.env.VITE_API_URL}/jobs/${jobId}/results.csv`
+
+  //Contamos cuantos items tienen cada termino contractual encontrado usando la funcion reduce que nos permite iterar sobre el array de items y crear un objeto donde las claves son los terminos encontrados y los valores son el numero de veces que aparecen
+  const termCounts = items.reduce((acc, it) => {
+    it.contract_terms_found.forEach(term => {
+      acc[term] = (acc[term] || 0) + 1
+    })
+    return acc
+  }, {})
+
+  //Creamos los datos que usaremos para el grafico de barras, las etiquetas del eje x seran las claves de nuestro objeto termCounts
+  const chartData = {
+    labels: Object.keys(termCounts),
+    datasets: [
+      {
+        label: 'Apariciones por término',
+        data: Object.values(termCounts),
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+      },
+    ],
+  }
+
+  return (
+    &lt;div className="container my-5">
+      &lt;div className="text-center mb-4">
+        &lt;a href={csvUrl} className="btn btn-link">
+          📥 Descargar CSV
+        &lt;/a>
+      &lt;/div>
+
+      &lt;div className="mb-5">
+        &lt;Bar data={chartData} />
+      &lt;/div>
+
+      &lt;table className="table table-striped table-bordered">
+        &lt;thead className="thead-light">
+          &lt;tr>
+            &lt;th>Título&lt;/th>
+            &lt;th>Fuente&lt;/th>
+            &lt;th>Fecha Pub&lt;/th>
+            &lt;th>Fecha Scrapeo&lt;/th>
+            &lt;th>Polarity&lt;/th>
+            &lt;th>Entidades&lt;/th>
+          &lt;/tr>
+        &lt;/thead>
+        &lt;tbody>
+          {items.map((it, i) => (
+            &lt;tr key={i}>
+              &lt;td>{it.title}&lt;/td>
+              &lt;td>
+                &lt;a href={it.link} target="_blank" rel="noreferrer">
+                  {it.source}
+                &lt;/a>
+              &lt;/td>
+              &lt;td>{it.publication_date}&lt;/td>
+              &lt;td>{it.date_scraped}&lt;/td>
+              &lt;td>{it.sentiment_polarity}&lt;/td>
+              &lt;td>{it.entities?.map(e => `${e.text} (${e.label})`).join(', ')}&lt;/td>
+            &lt;/tr>
+          ))}
+        &lt;/tbody>
+      &lt;/table>
+    &lt;/div>
+  )
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Button">Button</a></li><li><a href="global.html#Card">Card</a></li><li><a href="global.html#CardContent">CardContent</a></li><li><a href="global.html#CardHeader">CardHeader</a></li><li><a href="global.html#Progress">Progress</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jul 06 2025 20:05:05 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

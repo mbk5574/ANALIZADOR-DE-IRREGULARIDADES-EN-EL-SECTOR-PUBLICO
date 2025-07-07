@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pipelines de Scrapy (pipelines.py) &#8212; documentación de Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico - 04/07/2025</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=0313ea85"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="prev" title="Items de Scrapy (items.py)" href="items.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-corruption_detector.pipelines">
+<span id="pipelines-de-scrapy-pipelines-py"></span><h1>Pipelines de Scrapy (pipelines.py)<a class="headerlink" href="#module-corruption_detector.pipelines" title="Link to this heading">¶</a></h1>
+<p>Pipelines de Scrapy para el proyecto Corruption Detector.
+- CorruptionDetectorPipeline: gestionamos la serializacion de items a JSON y CSV, junto con la normalizacion y enriquecimiento de los datos.
+- TextCleanerPipeline: limpiamos el texto del título y su contenido antes de procesarlos.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="corruption_detector.pipelines.CorruptionDetectorPipeline">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corruption_detector.pipelines.</span></span><span class="sig-name descname"><span class="pre">CorruptionDetectorPipeline</span></span><a class="headerlink" href="#corruption_detector.pipelines.CorruptionDetectorPipeline" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Pipeline principal para realizar lo siguiente:</dt><dd><ol class="arabic simple">
+<li><p>Normalizamos fechas y metadatos.</p></li>
+<li><p>Extraemos entidades con spaCy.</p></li>
+<li><p>Contamos indicadores de corrupcion y longitud de contenido.</p></li>
+<li><p>Serializamos cada item a JSON y escribimos en un array en disco.</p></li>
+<li><p>Al cerrar el spider, generamos tambien un CSV “latest.csv”.</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.pipelines.CorruptionDetectorPipeline.close_spider">
+<span class="sig-name descname"><span class="pre">close_spider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.pipelines.CorruptionDetectorPipeline.close_spider" title="Link to this definition">¶</a></dt>
+<dd><p>Esta funcion Scrapy la llama automaticamente una sola vez, eso pasa justo cuando el spider ha terminado todo su trabajo
+es decir, (ha visitado todas las páginas y ha procesado todos los items), siempre:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Cerramos el array JSON añadiendo “]” al final</p></li>
+<li><p>Generamos un CSV con nombre timestamped y lo copiamos a “latest.csv”.</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.pipelines.CorruptionDetectorPipeline.open_spider">
+<span class="sig-name descname"><span class="pre">open_spider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.pipelines.CorruptionDetectorPipeline.open_spider" title="Link to this definition">¶</a></dt>
+<dd><p>Se ejecuta al inicio del spider. Inicializa ruta de resultados y un flag first_item.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corruption_detector.pipelines.CorruptionDetectorPipeline.process_item">
+<span class="sig-name descname"><span class="pre">process_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.pipelines.CorruptionDetectorPipeline.process_item" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>cada vez que se genera un item durante el scraping se debe procesar con esta funcion, normalizamos y enriquecemos cada item de las siguientes maneras:</dt><dd><ul class="simple">
+<li><p>Publicacion: convertimos fechas a ISO.</p></li>
+<li><p>Aniadimos date_scraped.</p></li>
+<li><p>Extraemos entidades con spaCy (PER, LOC, ORG).</p></li>
+<li><p>Contamos indicadores de corrupcion y longitud de contenido.</p></li>
+<li><p>Serializamos a JSON y escribimos en disco.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="corruption_detector.pipelines.TextCleanerPipeline">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corruption_detector.pipelines.</span></span><span class="sig-name descname"><span class="pre">TextCleanerPipeline</span></span><a class="headerlink" href="#corruption_detector.pipelines.TextCleanerPipeline" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>pequenio ipeline ligero para terminar de:</dt><dd><ul class="simple">
+<li><p>Eliminar espacios sobrantes y saltos en títulos y previews.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="corruption_detector.pipelines.strip_accents">
+<span class="sig-prename descclassname"><span class="pre">corruption_detector.pipelines.</span></span><span class="sig-name descname"><span class="pre">strip_accents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corruption_detector.pipelines.strip_accents" title="Link to this definition">¶</a></dt>
+<dd><p>Eliminamos acentos de una cadena usando unicodedata.normalize de la libreria unicodedata.
+Esto que hacemos aqui es muy util para normalizar el texto antes de realizar las comparaciones o conteos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Texto de entrada.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>Texto sin acentos.</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Documentación del Código:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api_main.html">API Principal (main.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_schemas.html">Schemas de Datos (schemas.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_models.html">Modelos de Base de Datos (models.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contract_processor.html">Procesador de Contratos (contract_processor.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scraper.html">Lanzador de Scraper (scraper.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spider.html">Spider (corruption_spider.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middlewares.html">Middlewares de Scrapy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items.html">Items de Scrapy (items.py)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pipelines de Scrapy (pipelines.py)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#corruption_detector.pipelines.CorruptionDetectorPipeline"><code class="docutils literal notranslate"><span class="pre">CorruptionDetectorPipeline</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#corruption_detector.pipelines.TextCleanerPipeline"><code class="docutils literal notranslate"><span class="pre">TextCleanerPipeline</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#corruption_detector.pipelines.strip_accents"><code class="docutils literal notranslate"><span class="pre">strip_accents()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="items.html" title="capítulo anterior">Items de Scrapy (items.py)</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mohammed Bannay Khyy.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/pipelines.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

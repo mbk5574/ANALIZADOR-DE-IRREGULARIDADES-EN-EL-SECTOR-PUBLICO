@@ -1,0 +1,15 @@
+### requirements.txt
+
+```txt
+fastapi==0.100.0
+uvicorn[standard]==0.22.0
+SQLAlchemy==2.0.19
+httpx==0.24.1
+python-multipart==0.0.6
+PyMuPDF==1.23.0
+spacy==3.5.1
+es-core-news-sm==3.5.0
+pysentimiento==0.0.7
+scrapy==2.8.0
+scrapy-playwright==0.1.4
+itemadapter==0.8.0

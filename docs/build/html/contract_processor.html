@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Procesador de Contratos (contract_processor.py) &#8212; documentación de Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico - 04/07/2025</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=0313ea85"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/translations.js?v=f85f4cfb"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Lanzador de Scraper (scraper.py)" href="scraper.html" />
+    <link rel="prev" title="Modelos de Base de Datos (models.py)" href="database_models.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="procesador-de-contratos-contract-processor-py">
+<h1>Procesador de Contratos (contract_processor.py)<a class="headerlink" href="#procesador-de-contratos-contract-processor-py" title="Link to this heading">¶</a></h1>
+<p>Lógica para extraer texto y metadatos de los archivos PDF.</p>
+<dl class="py class" id="module-backend.contract_processor">
+<dt class="sig sig-object py" id="backend.contract_processor.SimpleNotice">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">backend.contract_processor.</span></span><span class="sig-name descname"><span class="pre">SimpleNotice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjudicatario_nombre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entidad_adjudicadora</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objeto_contrato</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.contract_processor.SimpleNotice" title="Link to this definition">¶</a></dt>
+<dd><p>Representa la información minima extraída de un aviso de adjudicacion.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="backend.contract_processor.SimpleNotice.adjudicatario_nombre">
+<span class="sig-name descname"><span class="pre">adjudicatario_nombre</span></span><a class="headerlink" href="#backend.contract_processor.SimpleNotice.adjudicatario_nombre" title="Link to this definition">¶</a></dt>
+<dd><p>Nombre del adjudicatario de la adjudicacion.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="backend.contract_processor.SimpleNotice.entidad_adjudicadora">
+<span class="sig-name descname"><span class="pre">entidad_adjudicadora</span></span><a class="headerlink" href="#backend.contract_processor.SimpleNotice.entidad_adjudicadora" title="Link to this definition">¶</a></dt>
+<dd><p>Nombre del organismo o entidad adjudicadora.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="backend.contract_processor.SimpleNotice.objeto_contrato">
+<span class="sig-name descname"><span class="pre">objeto_contrato</span></span><a class="headerlink" href="#backend.contract_processor.SimpleNotice.objeto_contrato" title="Link to this definition">¶</a></dt>
+<dd><p>Texto que describe el objeto del contrato adjudicado.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.contract_processor.build_simple_notice">
+<span class="sig-prename descclassname"><span class="pre">backend.contract_processor.</span></span><span class="sig-name descname"><span class="pre">build_simple_notice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.contract_processor.build_simple_notice" title="Link to this definition">¶</a></dt>
+<dd><p>Convertimos aqui datos crudos en instancia de SimpleNotice limpiando espacios, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – Diccionario con posibles claves parciales extraídas.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#backend.contract_processor.SimpleNotice" title="backend.contract_processor.SimpleNotice"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleNotice</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SimpleNotice con cadenas normalizadas o None si faltan.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.contract_processor.extract_raw_data">
+<span class="sig-prename descclassname"><span class="pre">backend.contract_processor.</span></span><span class="sig-name descname"><span class="pre">extract_raw_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.contract_processor.extract_raw_data" title="Link to this definition">¶</a></dt>
+<dd><p>Busca patrones claves en el texto extraido para obtener metadato, es la manera en que conseguimos extraer cada uno de los terminos relevantes.</p>
+<dl class="simple">
+<dt>Patrones:</dt><dd><ul class="simple">
+<li><p>Adjudicatario: linea que suele seguir al texto «Adjudicatario».</p></li>
+<li><p>Entidad adjudicadora: línea tras «Entidad Adjudicadora».</p></li>
+<li><p>Objeto del Contrato: linea tras «Objeto del Contrato».</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Texto completo del PDF.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p>«adjudicatario_nombre», «entidad_adjudicadora», «objeto_contrato».</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Diccionario con claves parciales</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.contract_processor.extract_text_from_pdf">
+<span class="sig-prename descclassname"><span class="pre">backend.contract_processor.</span></span><span class="sig-name descname"><span class="pre">extract_text_from_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.contract_processor.extract_text_from_pdf" title="Link to this definition">¶</a></dt>
+<dd><p>Extrae todo el texto de un PDF manteniendo saltos de línea por página.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdf_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Ruta al archivo PDF.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Texto completo concatenado de todas las paginas, o tambien una cadena vacia en caso de que falle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.contract_processor.normalize_search_term">
+<span class="sig-prename descclassname"><span class="pre">backend.contract_processor.</span></span><span class="sig-name descname"><span class="pre">normalize_search_term</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">term</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.contract_processor.normalize_search_term" title="Link to this definition">¶</a></dt>
+<dd><p>Elimina sufijos legales de una razón social para obtener su nombre base que es lo que realmente nos interesa.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>term</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Cadena con el nombre completo, incluyendo posibles sufijos.</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-odd">Devuelve<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nombre simplificado sin sufijos como S.L., S.A., UTE, etc.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="backend.contract_processor.process_award_notice">
+<span class="sig-prename descclassname"><span class="pre">backend.contract_processor.</span></span><span class="sig-name descname"><span class="pre">process_award_notice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdf_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#backend.contract_processor.process_award_notice" title="Link to this definition">¶</a></dt>
+<dd><p>Flujo completo para extraer términos de búsqueda y metadatos de un PDF usando las funciones anteriores que acabamos de explicar.
+Los pasos que sigue son:
+1. extrae texto del PDF.
+2. Extrae datos crudos (en este caso: adjudicatario, entidad, objeto).
+3. construye SimpleNotice.
+4. Normalizamos sufijos y obtenemos la lista de términos únicos.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pdf_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – ruta al PDF de la adjudicacion.</p>
+</dd>
+<dt class="field-even">Devuelve<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>Lista de términos normalizados (sin sufijos ni duplicados).</p></li>
+<li><p>Instancia de SimpleNotice con metadatos.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Una tupla con</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Analizador de sentimiento para la deteccion de irregularidades en contratos del sector publico</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Documentación del Código:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api_main.html">API Principal (main.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_schemas.html">Schemas de Datos (schemas.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_models.html">Modelos de Base de Datos (models.py)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Procesador de Contratos (contract_processor.py)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#backend.contract_processor.SimpleNotice"><code class="docutils literal notranslate"><span class="pre">SimpleNotice</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.contract_processor.build_simple_notice"><code class="docutils literal notranslate"><span class="pre">build_simple_notice()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.contract_processor.extract_raw_data"><code class="docutils literal notranslate"><span class="pre">extract_raw_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.contract_processor.extract_text_from_pdf"><code class="docutils literal notranslate"><span class="pre">extract_text_from_pdf()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.contract_processor.normalize_search_term"><code class="docutils literal notranslate"><span class="pre">normalize_search_term()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backend.contract_processor.process_award_notice"><code class="docutils literal notranslate"><span class="pre">process_award_notice()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scraper.html">Lanzador de Scraper (scraper.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spider.html">Spider (corruption_spider.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middlewares.html">Middlewares de Scrapy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="items.html">Items de Scrapy (items.py)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelines.html">Pipelines de Scrapy (pipelines.py)</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="database_models.html" title="capítulo anterior">Modelos de Base de Datos (models.py)</a></li>
+      <li>Next: <a href="scraper.html" title="próximo capítulo">Lanzador de Scraper (scraper.py)</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Mohammed Bannay Khyy.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/contract_processor.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

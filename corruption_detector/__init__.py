@@ -5,7 +5,6 @@ import asyncio
 from asyncio.proactor_events import _ProactorBaseWritePipeTransport
 
 if sys.platform.startswith("win"):
-    # 1) Forzar el SelectorEventLoopPolicy en Windows y de esta manera evitamos el error de bajo nivel de asyncio
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     orig = _ProactorBaseWritePipeTransport._loop_writing
