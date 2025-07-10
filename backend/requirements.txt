@@ -4,3 +4,12 @@ sqlalchemy
 pydantic
 aiofiles          
 python-multipart
+httpx
+scrapy
+scrapy_playwright
+pysentimiento
+fitz
+tools
+es-core-news-sm
+spacy
+itemadapter
