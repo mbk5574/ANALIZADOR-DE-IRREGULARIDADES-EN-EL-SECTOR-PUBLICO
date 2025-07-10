@@ -63,7 +63,14 @@ node -v # Debería mostrar "v22.17.0".
 nvm current # Debería mostrar "v22.17.0".
 
 ## Verifica versión de npm:
-npm -v # Debería mostrar "10.9.2".
+npm -v 
+
+## importante instalar las siguientes modulos en node que no existen en el actual json
+npm install bootstrap@5 
+npm install framer-motion
+npm install recharts
+npm install chart.js
+npm install react-chartjs-2
 
 
 # Para ejecutar backend desde la raiz del proyecto puedes hacer:
