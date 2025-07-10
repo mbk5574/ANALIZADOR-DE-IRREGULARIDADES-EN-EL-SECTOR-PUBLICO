@@ -48,22 +48,7 @@ npm install
 
 # Para ejecutar frontend importante que estes situado en la carpeta frontend y ahi haces:
 npm run dev
-Muy importante asegurarse de instalar la ultima version de nodejs, a continuación se listan los pasos en un entorno Linux para la versión usada en el desarrollo de este proyecto:
-## Descarga e instala nvm:
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
-
-## en lugar de reiniciar la shell
-\. "$HOME/.nvm/nvm.sh"
-
-## Descarga e instala Node.js:
-nvm install 22
-
-## Verifica la versión de Node.js:
-node -v # Debería mostrar "v22.17.0".
-nvm current # Debería mostrar "v22.17.0".
-
-## Verifica versión de npm:
-npm -v 
+Muy importante asegurarse de instalar la ultima version de nodejs. Usar Windows para ejecutar el proyecto.
 
 ## importante instalar las siguientes modulos en node que no existen en el actual json
 npm install bootstrap@5 
