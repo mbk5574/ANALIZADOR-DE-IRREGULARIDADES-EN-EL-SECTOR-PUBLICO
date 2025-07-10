@@ -32,7 +32,7 @@ source venv/bin/activate
 # Windows
 venv\Scripts\activate
 
-# instala dependencias
+# instala dependencias(mejor coger el .txt en la carpeta backend)
 pip install -r requirements.txt
 
 # instala el modelo de spaCy (español)
